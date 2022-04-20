@@ -10,10 +10,10 @@ class StubPool:
     Create a stub pool with 4 stubs.
     """
     def __init__(self):
-        ports = [9000, 9001, 9002, 9003, 9004, 9005, 9006, 9007]
+        listeners = ['0.0.0.0:9000', '0.0.0.0:9001', '0.0.0.0:9002']
         self.stubs = []
-        for port in ports:
-            channel = grpc.insecure_channel(f'localhost:{port}')
+        for address in listeners:
+            channel = grpc.insecure_channel(address)
             stub = matrix_pb2_grpc.MatrixServiceStub(channel)
             self.stubs.append(stub)
         self.stub_idx = 0

@@ -27,7 +27,7 @@ class MatrixService(matrix_pb2_grpc.MatrixServiceServicer):
 async def serve(port):
     server = grpc.aio.server()
     matrix_pb2_grpc.add_MatrixServiceServicer_to_server(MatrixService(), server)
-    server.add_insecure_port(f'[::]:{port}')
+    server.add_insecure_port(f'0.0.0.0:{port}')
     await server.start()
     await server.wait_for_termination()
 

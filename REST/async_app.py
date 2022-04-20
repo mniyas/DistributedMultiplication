@@ -1,11 +1,12 @@
 from __future__ import print_function
+import logging
 
 from fastapi import FastAPI, UploadFile
 from async_grpcClient import StubPool, block_multiply, get_number_of_servers
 import numpy as np
 import asyncio
 
-GRPC_SERVERS = 8
+GRPC_SERVERS = 3
 app = FastAPI()
 stub_pool = StubPool()
 
@@ -60,7 +61,9 @@ async def matrix_file(A: UploadFile, B: UploadFile, deadline: float = 0.03):
     # calculate number of servers required for the opration
     servers = await get_number_of_servers(stub_pool, row_blocks[0][0], col_blocks[0][0], len(A), deadline)
     if servers > GRPC_SERVERS:
-        return {"error": "Not enough servers available to do the multiplication", "required servers": servers}
+        servers = GRPC_SERVERS
+        logging.info(f"""Not enough servers available to do the multiplication.
+                         Required servers: {servers}. Going with best-effort scheme""")
     
     # calculate multiplication of each block
     coros = [block_multiply(stub_pool, servers, row_blocks[i], col_blocks[j])

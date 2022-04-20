@@ -3,8 +3,9 @@ from __future__ import print_function
 from fastapi import FastAPI, UploadFile
 from grpcClient import StubPool, get_number_of_servers, block_multiply
 import numpy as np
+import logging
 
-GRPC_SERVERS = 8
+GRPC_SERVERS = 3
 app = FastAPI()
 stub_pool = StubPool()
 
@@ -58,7 +59,9 @@ def matrix_file(A: UploadFile, B: UploadFile, deadline: float = 0.03):
 
     servers = get_number_of_servers(stub_pool, row_blocks[0][0], col_blocks[0][0], len(A), deadline)
     if servers > GRPC_SERVERS:
-        return {"error": "Not enough servers available to do the multiplication", "required servers": servers}
+        servers = GRPC_SERVERS
+        logging.info(f"""Not enough servers available to do the multiplication.
+                         Required servers: {servers}. Going with best-effort scheme""")
 
     result = []
     # calculate the result of matrix multiplication

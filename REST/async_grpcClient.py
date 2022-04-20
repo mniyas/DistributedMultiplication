@@ -11,11 +11,11 @@ class StubPool:
     Create a stub pool with 4 async stubs.
     """
     def __init__(self):
-        ports = [8000, 8001, 8002, 8003, 8004, 8005, 8006, 8007]
+        listeners = ['0.0.0.0:8000', '0.0.0.0:8001', '0.0.0.0:8002']
         self.channels = []
         self.stubs = []
-        for port in ports:
-            channel = aio.insecure_channel(f'localhost:{port}')
+        for address in listeners:
+            channel = aio.insecure_channel(address)
             stub = matrix_pb2_grpc.MatrixServiceStub(channel)
             self.channels.append(channel)
             self.stubs.append(stub)
