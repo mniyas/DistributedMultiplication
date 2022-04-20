@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+
+    REST:
+        build:
+            context: .
+            dockerfile: REST/Dockerfile
+        environment: # passing gRPC container DNS to the REST container
+            ENV_GRPC1: grpc1
+            ENV_GRPC2: grpc2
+            ENV_GRPC3: grpc3
+        image: rest-server
+        networks:
+            - microservices
+        ports:
+            - 8010:8010
+
+    grpc1:
+        build:
+            context: .
+            dockerfile: gRPC/Dockerfile
+        image: grpc-server
+        hostname: grpc1
+        networks:
+            - microservices
+
+    grpc2:
+        build:
+            context: .
+            dockerfile: gRPC/Dockerfile
+        image: grpc-server
+        hostname: grpc2
+        networks:
+            - microservices
+
+    grpc3:
+        build:
+            context: .
+            dockerfile: gRPC/Dockerfile
+        image: grpc-server
+        hostname: grpc3
+        networks:
+            - microservices
+
+networks:
+    microservices:

@@ -6,7 +6,7 @@ class MatrixMultiplication(HttpUser):
     '''
     @task
     def matrix(self):
-        A = open('../input/A4.txt', 'r').read()
-        B = open('../input/B4.txt', 'r').read()
+        A = open('../input/A8.txt', 'r').read()
+        B = open('../input/B8.txt', 'r').read()
         files={"A": A, "B": B}
         self.client.post("/matrix", files=files, data={"deadline": 0.03})

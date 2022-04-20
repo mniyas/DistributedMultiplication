@@ -1,6 +1,7 @@
 import time
 import math
 from grpc import aio
+import os
 
 from matrix_pb2 import MatrixRequest
 import matrix_pb2_grpc
@@ -11,7 +12,10 @@ class StubPool:
     Create a stub pool with 4 async stubs.
     """
     def __init__(self):
-        listeners = ['0.0.0.0:8000', '0.0.0.0:8001', '0.0.0.0:8002']
+        grpc1 = os.getenv("ENV_GRPC1", "0.0.0.0")
+        grpc2 = os.getenv("ENV_GRPC2", "0.0.0.0")
+        grpc3 = os.getenv("ENV_GRPC3", "0.0.0.0")
+        listeners = [f'{grpc1}:8000', f'{grpc2}:8000', f'{grpc3}:8000']
         self.channels = []
         self.stubs = []
         for address in listeners:

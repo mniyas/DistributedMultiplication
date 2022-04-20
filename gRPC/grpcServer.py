@@ -1,3 +1,4 @@
+import os
 from concurrent import futures
 import logging
 import argparse
@@ -25,7 +26,9 @@ class MatrixService(matrix_pb2_grpc.MatrixServiceServicer):
 def serve(port):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     matrix_pb2_grpc.add_MatrixServiceServicer_to_server(MatrixService(), server)
-    server.add_insecure_port(f'[::]:{port}')
+    host = os.getenv("ENV_HOST", "0.0.0.0")
+    port = os.getenv("ENV_PORT", port)
+    server.add_insecure_port(f'{host}:{port}')
     server.start()
     server.wait_for_termination()
 
@@ -33,7 +36,7 @@ def serve(port):
 if __name__ == '__main__':
     logging.basicConfig()
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--port', default=50051, type=int, help='The port to listen on.')
+    argparser.add_argument('--port', default=8000, type=int, help='The port to listen on.')
     args = argparser.parse_args()
     logging.info('Starting server on port {}.'.format(args.port))
     serve(args.port)

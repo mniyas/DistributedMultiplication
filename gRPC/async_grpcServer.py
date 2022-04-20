@@ -1,6 +1,7 @@
 from concurrent import futures
 import logging
 import argparse
+import os
 
 import asyncio
 import grpc
@@ -27,7 +28,9 @@ class MatrixService(matrix_pb2_grpc.MatrixServiceServicer):
 async def serve(port):
     server = grpc.aio.server()
     matrix_pb2_grpc.add_MatrixServiceServicer_to_server(MatrixService(), server)
-    server.add_insecure_port(f'0.0.0.0:{port}')
+    host = os.getenv("ENV_HOST", "0.0.0.0")
+    port = os.getenv("ENV_PORT", port)
+    server.add_insecure_port(f'{host}:{port}')
     await server.start()
     await server.wait_for_termination()
 
@@ -35,7 +38,7 @@ async def serve(port):
 if __name__ == '__main__':
     logging.basicConfig()
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('--port', default=50051, type=int, help='The port to listen on.')
+    argparser.add_argument('--port', default=8000, type=int, help='The port to listen on.')
     args = argparser.parse_args()
     logging.info('Starting server on port {}.'.format(args.port))
     asyncio.run(serve(args.port))

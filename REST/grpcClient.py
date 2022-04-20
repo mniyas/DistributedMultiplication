@@ -1,3 +1,4 @@
+import os
 import grpc
 import time
 import math
@@ -10,7 +11,10 @@ class StubPool:
     Create a stub pool with 4 stubs.
     """
     def __init__(self):
-        listeners = ['0.0.0.0:9000', '0.0.0.0:9001', '0.0.0.0:9002']
+        grpc1 = os.getenv("ENV_GRPC1", "0.0.0.0")
+        grpc2 = os.getenv("ENV_GRPC2", "0.0.0.0")
+        grpc3 = os.getenv("ENV_GRPC3", "0.0.0.0")
+        listeners = [f'{grpc1}:8000', f'{grpc2}:8000', f'{grpc3}:8000']
         self.stubs = []
         for address in listeners:
             channel = grpc.insecure_channel(address)
