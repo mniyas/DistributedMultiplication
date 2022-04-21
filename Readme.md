@@ -3,14 +3,13 @@ This project involves the use of REST interface and gRPC based services to allow
 multiple machines. Block Matrix multiplication is a method for multiplying matrices which is useful in distributed systems as it can easily split the calculations among mutiple machines.
 
 # Architecture
-
 - This project involves 3 components
     - a REST interface to upload matrix as input files. I'm using FastAPI for this.
     - Async gRPC Servers to do the matrix multiplication and addition
     - Async gRPC Clients
 
 # Setup with Docker
-
+- Run `docker-compose build` to build images
 - Running `docker-compose up` should run 1 REST container and 3 gRPC server containers.
 - Visit `http://0.0.0.0:8010/docs` to access the API
 
